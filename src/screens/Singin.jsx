@@ -1,13 +1,8 @@
 import { Box } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  connectWalletToSite,
-  getProvider,
-  getWalletAddress,
-} from "../utils/wallet";
+import { connectWalletToSite, getWalletAddress } from "../utils/wallet";
 import { createUser } from "../api/user";
-import bs58 from "bs58";
 
 export const Signin = () => {
   const navigate = useNavigate();
