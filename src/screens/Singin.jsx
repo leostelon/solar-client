@@ -11,7 +11,7 @@ export const Signin = () => {
     let token = localStorage.getItem("token");
     await connectWalletToSite();
     if (token && token !== "" && token !== "undefined") {
-      return navigate("/home");
+      return navigate("/index");
     }
     const address = await getWalletAddress();
     if (address && address !== "") {
@@ -20,7 +20,7 @@ export const Signin = () => {
       }
       token = localStorage.getItem("token");
       if (token && token !== "" && token !== "undefined") {
-        navigate("/home");
+        navigate("/index");
       }
     }
   }

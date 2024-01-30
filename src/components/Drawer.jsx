@@ -153,7 +153,7 @@ export function Drawer({ smaller }) {
 							flexDirection: "column",
 						}}
 					>
-						<h2>Platypus</h2>
+						<h2>Solar</h2>
 						<Avatar sx={{ height: "70px", width: "70px", mt: 3 }} />
 					</Box>
 
