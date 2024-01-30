@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Drawer } from "../components/Drawer";
+import { createPayment } from "../api/payment";
 
 export const Create = () => {
 	const [amount, setAmount] = useState("");
@@ -58,6 +59,7 @@ export const Create = () => {
 									borderRadius: 2,
 								}}
 								onClick={async () => {
+									await createPayment(amount);
 									setAmount("");
 								}}
 							>
