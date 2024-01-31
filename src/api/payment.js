@@ -7,9 +7,11 @@ export const createPayment = async function (amount) {
         if (typeof a !== "number") return alert("Invalid amount type")
 
         let address = localStorage.getItem("solana_address");
+        let token = localStorage.getItem("token");
         const response = await axios.post(SERVER_URL + "/payment", { address, amount }, {
             headers: {
                 "Content-Type": `application/json`,
+                "Authorization": "Bearer "+ token,
             },
         });
         if (response.status === 200) {
@@ -23,10 +25,11 @@ export const createPayment = async function (amount) {
 
 export const getPayments = async function () {
     try {
-        let address = localStorage.getItem("solana_address");
-        const response = await axios.get(SERVER_URL + `/payment/${address}`, {
+        let token = localStorage.getItem("token");
+        const response = await axios.get(SERVER_URL + `/payment`, {
             headers: {
                 "Content-Type": `application/json`,
+                "Authorization": "Bearer "+ token,
             },
         });
         if (response.status === 200) {
