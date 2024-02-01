@@ -4,7 +4,7 @@ import { SERVER_URL } from "../constants";
 export const createInvoice = async function (payment) {
     try {
         let token = localStorage.getItem("token");
-        const response = await axios.post(SERVER_URL + `/invoice`, { payment }, {
+        const response = await axios.post(SERVER_URL + `/invoice/solinvoice`, { payment }, {
             headers: {
                 "Content-Type": `application/json`,
                 "Authorization": "Bearer "+ token,
