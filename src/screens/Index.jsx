@@ -7,6 +7,8 @@ import Logo from "../assets/logo.png";
 import { shortText } from "../utils/shortText";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { getTransactions } from "../api/user";
+import { solanaConnection } from "../constants";
+import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 export const Index = () => {
 	const [address, setAddress] = useState("");
@@ -20,6 +22,7 @@ export const Index = () => {
 		const ad = localStorage.getItem("solana_address");
 		setAddress(ad);
 		gT(ad);
+		gB(ad);
 	}
 
 	async function gT(ad) {
@@ -28,6 +31,12 @@ export const Index = () => {
 		const time = res.map((r) => new Date(r.blockTime * 1000));
 		console.log({ amount, time });
 		setTransactions({ amount, time });
+	}
+
+	async function gB(ad) {
+		const publicKey = new PublicKey(ad);
+		let balance = await solanaConnection.getBalance(publicKey);
+		setBalance(balance / LAMPORTS_PER_SOL);
 	}
 
 	useEffect(() => {
