@@ -6,9 +6,7 @@ import Cardbg from "../assets/cardbg.png";
 import Logo from "../assets/logo.png";
 import { shortText } from "../utils/shortText";
 import { LineChart } from "@mui/x-charts/LineChart";
-import { getTransactions } from "../api/user";
-import { solanaConnection } from "../constants";
-import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
+import { getBalance, getTransactions } from "../api/user";
 
 export const Index = () => {
 	const [address, setAddress] = useState("");
@@ -18,13 +16,6 @@ export const Index = () => {
 		time: [],
 	});
 
-	function getAddress() {
-		const ad = localStorage.getItem("solana_address");
-		setAddress(ad);
-		gT(ad);
-		gB(ad);
-	}
-
 	async function gT(ad) {
 		const res = await getTransactions(ad);
 		const amount = res.map((r) => r.amount / 10 ** 9).reverse();
@@ -33,14 +24,16 @@ export const Index = () => {
 		setTransactions({ amount, time });
 	}
 
-	async function gB(ad) {
-		const publicKey = new PublicKey(ad);
-		let balance = await solanaConnection.getBalance(publicKey);
-		setBalance(balance / LAMPORTS_PER_SOL);
+	async function gB() {
+		let resp = await getBalance();
+		setBalance(resp.amount);
 	}
 
 	useEffect(() => {
-		getAddress();
+		const ad = localStorage.getItem("solana_address");
+		setAddress(ad);
+		gT(ad);
+		gB(ad);
 	}, []);
 
 	return (
