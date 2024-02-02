@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Skeleton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Drawer } from "../components/Drawer";
 import { MdAddCircleOutline } from "react-icons/md";
@@ -6,15 +6,27 @@ import Cardbg from "../assets/cardbg.png";
 import Logo from "../assets/logo.png";
 import { shortText } from "../utils/shortText";
 import { LineChart } from "@mui/x-charts/LineChart";
+import { PieChart } from "@mui/x-charts/PieChart";
 import { getBalance, getTransactions } from "../api/user";
+import { getInvoices } from "../api/invoice";
+import { InvoiceTile } from "../components/InvoiceTile";
 
 export const Index = () => {
 	const [address, setAddress] = useState("");
 	const [balance, setBalance] = useState("0");
+	const [paymentLoading, setPaymentLoading] = useState(true);
+	const [payments, setPayments] = useState([]);
 	const [transactions, setTransactions] = useState({
 		amount: [],
 		time: [],
 	});
+
+	async function gP() {
+		setPaymentLoading(true);
+		const jobResolved = await getInvoices();
+		setPayments(jobResolved);
+		setPaymentLoading(false);
+	}
 
 	async function gT(ad) {
 		const res = await getTransactions(ad);
@@ -34,6 +46,7 @@ export const Index = () => {
 		setAddress(ad);
 		gT(ad);
 		gB(ad);
+		gP();
 	}, []);
 
 	return (
@@ -143,6 +156,93 @@ export const Index = () => {
 									</Box>
 									<small>Support for multiple accounts coming soon.</small>
 								</Box>
+							</Box>
+						</Box>
+						<Box sx={{ display: "flex", width: "100%", height: "100%" }}>
+							<Box
+								sx={{
+									width: "100%",
+									height: "50vh",
+									flex: 3,
+									p: 2,
+									m: 1,
+									boxShadow: "0 1px 6px rgba(0,0,0,.1)",
+								}}
+							>
+								<PieChart
+									series={[
+										{
+											data: [
+												{
+													id: 0,
+													value: 10,
+													label: "Total Bills",
+													color: "#FFB878",
+												},
+												{
+													id: 1,
+													value: 15,
+													label: "Pending Bills",
+													color: "#5455FF",
+												},
+												{
+													id: 2,
+													value: 20,
+													label: "Paid Bill",
+													color: "#FE647E",
+												},
+											],
+											innerRadius: 65,
+											outerRadius: 100,
+										},
+									]}
+									width={450}
+									height={200}
+								/>
+							</Box>
+							<Box
+								sx={{
+									width: "100%",
+									height: "50vh",
+									flex: 4,
+									p: 2,
+									m: 1,
+									boxShadow: "0 1px 6px rgba(0,0,0,.1)",
+								}}
+							>
+								{paymentLoading ? (
+									<Box>
+										{Array.from({ length: 10 }).map((_, i) => (
+											<Skeleton
+												variant="rectangular"
+												sx={{ my: 1 }}
+												height={"75px"}
+												key={i}
+											/>
+										))}
+									</Box>
+								) : (
+									<Box mt={2}>
+										<h2>Recent Invoices</h2>
+										<table>
+											<thead>
+												<tr>
+													<th>Id</th>
+													<th>Status</th>
+													<th>Amount</th>
+													<th>Payment Link</th>
+													<th>UID</th>
+													<th>Created</th>
+												</tr>
+											</thead>
+											<tbody>
+												{payments.slice(0, 5).map((item, i) => (
+													<InvoiceTile invoice={item} key={i} />
+												))}
+											</tbody>
+										</table>
+									</Box>
+								)}
 							</Box>
 						</Box>
 					</Box>
