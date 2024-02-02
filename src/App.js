@@ -5,6 +5,7 @@ import { Create } from "./screens/Create";
 import { Signin } from "./screens/Singin";
 import { Payments } from "./screens/Payments";
 import { InvoiceList } from "./screens/InvoiceList";
+import { Invoice } from "./screens/Invoice";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/create" exact element={<Create />} />
         <Route path="/payments" exact element={<Payments />} />
         <Route path="/invoice" exact element={<InvoiceList />} />
+        <Route path="/invoice/:id" exact element={<Invoice />} />
       </Routes>
     </Router>
   );
