@@ -10,7 +10,7 @@ export const Payments = () => {
 
 	async function gP() {
 		setLoading(true);
-		const address = localStorage.getItem("address");
+		const address = localStorage.getItem("solana_address");
 		const jobResolved = await getPayments(address);
 		setPayments(jobResolved);
 		setLoading(false);

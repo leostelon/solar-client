@@ -63,3 +63,19 @@ export const getUser = async function () {
 		}
 	}
 };
+
+export const getTransactions = async function () {
+	try {
+		const address = localStorage.getItem("solana_address");
+		const resp = await axios.get(`${SERVER_URL}/user/transaction`, {
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		return resp.data;
+	} catch (error) {
+		if (error.response && error.response.status === 401) {
+			return 401;
+		}
+	}
+};
