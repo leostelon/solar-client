@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { createInvoice } from "../api/invoice";
+import { createInvoice, getInvoice } from "../api/invoice";
 import { Box, CircularProgress, Tooltip } from "@mui/material";
 import QRCode from "react-qr-code";
 import { useState } from "react";
@@ -15,6 +15,7 @@ export const Invoice = () => {
 	const [bill, setBill] = useState(false);
 	const billRef = useRef({});
 	const [open, setOpen] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	function toggleCopy() {
 		setCopyEnabled(!copyEnabled);
@@ -25,6 +26,19 @@ export const Invoice = () => {
 		setBill(response);
 		console.log(response);
 		billRef.current = response;
+		checkStatus(billRef.current);
+	}
+
+	async function checkStatus(bill) {
+		if (!bill) return;
+		const timer = setInterval(async () => {
+			const response = await getInvoice(bill.uid);
+			if (response.status !== "created") {
+				setLoading(false);
+				setBill(response);
+				clearInterval(timer);
+			}
+		}, 10000);
 	}
 
 	useEffect(() => {
@@ -56,6 +70,7 @@ export const Invoice = () => {
 					<h1>Payment Request</h1>
 					<br />
 					<br />
+					<h2 style={{ color: "grey" }}>{bill.payment.amount}SOL</h2>
 					<QRCode
 						value={`http://localhost:3000/checkout/${bill.uid ? bill.uid : ""}`}
 						size={150}
@@ -109,6 +124,22 @@ export const Invoice = () => {
 							</Box>
 						</Tooltip>
 					</Box>
+					{loading ? (
+						<Box
+							sx={{
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+							}}
+						>
+							<CircularProgress size={15} sx={{ mr: 1 }} />
+							<h4>Waiting for payment</h4>
+						</Box>
+					) : (
+						<h4 style={{ textDecoration: "underline" }}>
+							"Payment completed✅"
+						</h4>
+					)}
 					<Box mt={2} textAlign="center">
 						<small style={{ color: PrimaryGrey }}>Powered by Solar🔥</small>
 						<br />

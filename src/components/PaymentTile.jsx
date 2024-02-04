@@ -32,7 +32,7 @@ export const PaymentTile = ({ payment }) => {
 					<Box
 						onClick={() => {
 							navigator.clipboard.writeText(
-								`http://localhost:3000/payment/${payment._id}`
+								`http://localhost:3001/invoice/${payment._id}`
 							);
 							setOpen(true);
 						}}
