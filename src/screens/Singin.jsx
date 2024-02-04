@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { connectWalletToSite, getWalletAddress } from "../utils/wallet";
@@ -12,10 +12,10 @@ export const Signin = () => {
 		await connectWalletToSite();
 		if (token && token !== "" && token !== "undefined") {
 			const status = await getUser();
-      if(status === 401 ) {
-        localStorage.clear();
-        return connectSite();
-      }
+			if (status === 401) {
+				localStorage.clear();
+				return connectSite();
+			}
 			return navigate("/index");
 		}
 		const address = await getWalletAddress();
@@ -35,5 +35,17 @@ export const Signin = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return <Box>signin</Box>;
+	return (
+		<Box
+			sx={{
+				height: "100vh",
+				width: "100vw",
+				display: "flex",
+				alignItems: "center",
+				justifyContent: "center",
+			}}
+		>
+			<CircularProgress />
+		</Box>
+	);
 };
